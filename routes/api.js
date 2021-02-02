@@ -66,34 +66,27 @@ module.exports = function (pool) {
 
   //LOGIN
   router.post('/login', function (req, res, next) {
-    pool.query(`select * from users where email = '${req.body.email}'`, (err, data) => {
-      // console.log( data.rows[0].password)
-      console.log(data.rows)
-      if (err) {
-        req.session.user = data.rows[0]
-        res.json({ msg: 'success' })
-
+    const { email, password } = req.body
+    pool.query(`select * from users where email = '${email}'`, (err, data) => {
+      if (err) return res.json('error')
+      if (data.rows.length !== 0) {
+        bcrypt.compare(password, data.rows[0].password, function (err, result) {
+          if (err) {
+            res.json({ msg: 'Email dan/atau password salah' })
+          } else {
+            let user = data.rows[0]
+            req.session.user = user;
+            req.session.loggedIn = true;
+            res.json({ msg: 'success' })
+          }
+        }
+        )
+      } else {
+        res.json({ msg: 'Email belum terdaftar' })
       }
 
-      if (data.rows.lenght = 0) {
-        console.log('disini')
-        res.json({ msg: 'gugul' })
-      }
-
-      bcrypt.compare(req.body.password, data.rows[0].password, function (err, result) {
-        if (err) {
-          console.log('error euy')
-          res.json({ msg: 'success' })
-        }
-        if (result) {
-          let user = data.rows[0]
-          req.session.user = user;
-          req.session.loggedIn = true;
-          res.json({ msg: 'success' })
-        }
-      });
     })
-  });
+  })
 
   router.get('/compare/:id', (req, res) => {
     var { id } = req.params;
@@ -257,7 +250,7 @@ module.exports = function (pool) {
 
   //UPLOAD
   router.post('/upload', function (req, res) {
-    var { lokasi,harga,coordinate, isNego,kategori,mandi, tidur,tanah,id_users,deskripsi} = req.body;
+    var { lokasi, harga, coordinate, isNego, kategori, mandi, tidur, tanah, id_users, deskripsi } = req.body;
     // console.log(isNego)
     // console.log(kategori)
     function makeid(length) {
@@ -277,7 +270,7 @@ module.exports = function (pool) {
 
     today = mm + '_' + yyyy;
 
-    let __dirname ='/home/rezi/Desktop/Batch24/RumahLaku/public/images/upload/'
+    let __dirname = '/home/rezi/Desktop/Batch24/RumahLaku/public/images/upload/'
 
     if (!req.files || Object.keys(req.files).length === 0) {
       return res.send("Gagal")
