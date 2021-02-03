@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
         integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <title>Login-RUMAHLAKU</title>
 
 </head>
@@ -50,23 +51,23 @@
         <form class="form signin" id="login-form">
             <label>Email</label>
             <br>
-            <input type="email" id="inputEmail" name="email" class="form-control" placeholder="Email address">
+            <input type="email" id="inputEmail" name="email" class="form-control" placeholder="Email address" required>
             <br>
             <label>Password</label>
             <br>
-            <input type="password" id="inputPassword" name="password" class="form-control" placeholder="Your Password">
+            <input type="password" id="inputPassword" name="password" class="form-control" placeholder="Your Password" required>
             <br>
             <label>
                 <input type="checkbox" value="remember-me"> Remember me
             </label>
-            <button class="btn btn-primary btn-block" href='/' type="submit">Login</button>
+            <button class="btn btn-primary btn-block" type="submit">Login</button>
             <p>doesn't have account <a href="/register">click here</a></p>
         </form>
     </div><br>
     <div class="text-center">
-     <p class="mb-1">&copy;RUBICAMP24</p>
+        <p class="mb-1">&copy;RUBICAMP24</p>
     </div>
-   
+
     <script type="text/javascript">
         const API_URL = `http://localhost:3000/api/index`
         $(document).ready(function () {
@@ -87,7 +88,28 @@
 
                     }
                 }).done(function (data) {
-                    window.location.href = "/"
+                    console.log(data.msg)
+                    let msg = data.msg
+                    if (msg == 'Email dan/atau password salah') {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Email dan/atau password salah!',
+                        })
+                    } if (msg == 'Email belum terdaftar') {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Email belum terdaftar',
+                        })
+                    } if (msg == "success") {
+                        Swal.fire(
+                            'Good job!',
+                            'You clicked the button!',
+                            'success'
+                        ).then(window.location.href ="/")
+                        
+                    }
                 }).fail(function (jqXHR, textStatus) {
                     alert("Request failed get data: " + textStatus);
                 })
@@ -95,4 +117,5 @@
         }
     </script>
 </body>
+
 </html>

@@ -88,6 +88,7 @@ module.exports = function (pool) {
     })
   })
 
+  //COMPARE
   router.get('/compare/:id', (req, res) => {
     var { id } = req.params;
     let rep = id.split('+').join(',')
