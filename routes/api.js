@@ -25,32 +25,22 @@ module.exports = function (pool) {
     })
   })
 
-
   //REGISTER
   router.post('/register', function (req, res, next) {
     if (req.body.password != req.body.repassword) {
       req.flash('info', 'password doesnt match') //set
-
     }
-
     pool.query('select * from users where email= $1', [req.body.email], (err, data) => {
       if (err) {
         req.flash('info', 'try again later')
-
       }
-
       if (data.rows.lenght > 0) {
         req.flash('info', 'try again later')
-
       }
-
       bcrypt.hash(req.body.password, saltRounds, function (err, hash) {
         if (err) {
           req.flash('info', 'email alredy exist')
-
         }
-
-
         pool.query(`insert into users(username,email, password,no_tlp) values ($1, $2, $3, $4)`, [req.body.username, req.body.email, hash, req.body.notelepon], (err, data) => {
           if (err) {
             req.flash('info', 'try again later')
