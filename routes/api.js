@@ -7,7 +7,6 @@ const saltRounds = 10;
 const fileUpload = require('express-fileupload');
 
 router.use(fileUpload())
-
 module.exports = function (pool) {
   /* GET home page. */
 
@@ -44,7 +43,6 @@ module.exports = function (pool) {
         pool.query(`insert into users(username,email, password,no_tlp) values ($1, $2, $3, $4)`, [req.body.username, req.body.email, hash, req.body.notelepon], (err, data) => {
           if (err) {
             req.flash('info', 'try again later')
-
           }
           req.flash('info', 'you have registered please sign in')
           res.json({ msg: 'success' })
@@ -52,7 +50,6 @@ module.exports = function (pool) {
       });
     })
   });
-
 
   //LOGIN
   router.post('/login', function (req, res, next) {
@@ -92,7 +89,6 @@ module.exports = function (pool) {
     })
   })
 
-
   //PAGENATION
   router.get('/:page', function (req, res, next) {
     const search = req.query.search
@@ -130,7 +126,6 @@ module.exports = function (pool) {
         } else {
           params.push(lokasi)
         }
-
       }
       if (search) {
         params.push(`foto = '${search}'`)
@@ -253,22 +248,17 @@ module.exports = function (pool) {
       }
       return result;
     }
-
     var today = new Date();
     var dd = String(today.getDate()).padStart(2, '0');
     var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
     var yyyy = today.getFullYear();
-
     today = mm + '_' + yyyy;
-
     let __dirname = '/home/rezi/Desktop/Batch24/RumahLaku/public/images/upload/'
-
     if (!req.files || Object.keys(req.files).length === 0) {
       return res.send("Gagal")
     }
     var filename = []
     let sizeFiles = Object.keys(req.files.sampleFile).length;
-
     for (let i = 0; i < sizeFiles; i++) {
       // The name of the input field (i.e. "sampleFile") is used to retrieve the uploaded file
       let foto = req.files.sampleFile[i];
